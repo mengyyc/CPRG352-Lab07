@@ -53,6 +53,7 @@ public class UserServlet extends HttpServlet {
 
 		switch(action) {
 			case "add":
+				System.out.println("Add request");
 				String email = request.getParameter("email");
 				boolean active = true;
 				String firstName = request.getParameter("firstName");
@@ -79,7 +80,21 @@ public class UserServlet extends HttpServlet {
 				}
 				break;
 
-
+			case "edit":
+				email = request.getParameter("email");
+				active = Boolean.parseBoolean(request.getParameter("active"));
+				firstName = request.getParameter("firstName");
+				lastName = request.getParameter("lastName");
+				password = request.getParameter("password");
+				roleName = request.getParameter("roleName");
+				try {
+					role = roleService.get(roleName);
+					User user = new User(email, active, firstName, lastName, password, role);
+					userService.update(user);
+				} catch (SQLException ex) {
+					Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				break;
 		}
 
 		this.doGet(request, response);
